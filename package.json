@@ -1,0 +1,24 @@
+{
+  "name": "psn_agent",
+  "version": "0.1.0",
+  "description": "an automation tool for PSN web login",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fakeshadow/psn_agent.git"
+  },
+  "author": "fakeshadow",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fakeshadow/psn_agent/issues"
+  },
+  "homepage": "https://github.com/fakeshadow/psn_agent#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "promise-poller": "^1.9.1",
+    "puppeteer": "^3.0.4"
+  }
+}
