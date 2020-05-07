@@ -1,6 +1,6 @@
 An atomation tool for PSN account login management. 
 </br>
-<b>Please don't use it for spaming purpose.<b>
+<b>Please don't use it for spaming purpose.</b>
 
 ## Example:
 - `npm install`
