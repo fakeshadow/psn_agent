@@ -1,4 +1,4 @@
-/// 2chaptcha is used as bypass service for recaptcha v2.
+/// 2captcha is used as bypass service for recaptcha v2.
 ///
 /// This tool have nothing to do with the running of said service and no `soft_id` is used in the service call
 
@@ -63,6 +63,12 @@ class twocaptchaAPI {
             interval,
             retries
         });
+    }
+
+    async get_balance() {
+        const url = `${config.recaptchaResUrl}?key=${this.apiKey}&action=getbalance&json=1`;
+        const res = await axios.get(url);
+        return res.data.request;
     }
 }
 

@@ -33,10 +33,11 @@ class PSNAgent {
 
         // - We don't pass proxy_arg to puppeteer as for now proxy is not needed.
         // let proxy_arg;
-        // if (proxy.type === "HTTP") {
-        //     proxy_arg = `--proxy-server=${proxy.address}`;
+        // const { type, address } = proxy;
+        // if (type === "HTTP") {
+        //     proxy_arg = `--proxy-server=${address}`;
         // } else {
-        //     proxy_arg = `--proxy-server=${proxy.type}://${proxy.address}`;
+        //     proxy_arg = `--proxy-server=${type}://${address}`;
         // }
 
         this.browser = await puppeteer.launch({
@@ -78,7 +79,7 @@ class PSNAgent {
             let postData = null;
 
             // intercept the post request to auth api and inject our recaptcha result.
-            if (request.method === "POST" && request.url.startsWith("https://auth.api.sonyentertainmentnetwork.com/")) {
+            if (request.method === "POST" && request.url.startsWith(config.autUrl)) {
                 postData = request.postData.toString();
                 if (postData.startsWith("grant_type=captcha")) {
                     if (this.recaptcahResult != null) {
@@ -93,6 +94,7 @@ class PSNAgent {
                     const json = JSON.parse(postData);
                     if (json.npsso != null) {
                         this.npsso = json.npsso;
+                        return;
                     }
                 } catch (e) {
                     // we do nothing if the parse failed and sliently drop the error
@@ -139,14 +141,21 @@ class PSNAgent {
         while (try_wait < 10) {
             await page.waitFor(2000);
             if (this.npsso === null) {
+                if (try_wait === 9) {
+                    throw new Error("Timeout when intercept npsso code");
+                }
                 try_wait += 1;
             } else {
                 break;
             }
-        } 
+        }
 
         await page.close();
         return this.npsso;
+    }
+
+    async get_balance() {
+        return this.api.get_balance();
     }
 }
 

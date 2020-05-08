@@ -1,4 +1,4 @@
-An atomation tool for PSN account login management. 
+An automation tool for PSN account login management. 
 </br>
 <b>Please don't use it for spaming purpose.</b>
 
