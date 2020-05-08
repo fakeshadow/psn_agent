@@ -150,6 +150,7 @@ class PSNAgent {
             }
         }
 
+        await client.detach();
         await page.close();
         return this.npsso;
     }
