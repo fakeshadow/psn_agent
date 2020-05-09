@@ -88,22 +88,29 @@ class PSNAgent {
                         postData = postData + tokenStr + this.recaptcahResult;
                     };
                 }
-
-                // We just try to parse all request into json and throw away all the failed ones.
-                try {
-                    const json = JSON.parse(postData);
-                    if (json.npsso != null) {
-                        this.npsso = json.npsso;
-                        return;
-                    }
-                } catch (e) {
-                    // we do nothing if the parse failed and sliently drop the error
-                }
             }
-
             postData != null ?
                 client.send('Network.continueInterceptedRequest', { interceptionId, postData })
                 : client.send('Network.continueInterceptedRequest', { interceptionId });
+
+        });
+
+        // we try to parse all the response json from auth api.
+        page.on('response', async (response) => {
+            if (response.url().startsWith(config.autUrl))
+                try {
+                    const json = await response.json();
+                    if (json.npsso !== null) {
+                        const { npsso, expires_in } = json;
+                        const expires_at = Date.now() + expires_in * 1000;
+                        this.npsso = {
+                            npsso,
+                            expires_at: new Date(expires_at).toUTCString()
+                        };
+                    }
+                } catch (e) {
+                    // we sliently drop the failed ones as they can't be the ones we want.
+                }
 
         });
 
